@@ -1,56 +1,56 @@
 function onFormSubmit(e) {
   
-  var form = FormApp.openById('1olpgbqAFOrSS5dRDWKJUjT4oOMQOQMdv-ibHdOE_d20');
+  var form = FormApp.openById('1olpgbqAFOrSS5dRDWKJUjT4oOMQOQMdv-ibHdOE_d20'); //Open the form by its ID
+   // Get the last response
   var responsesCount = form.getResponses().length;
-  var responses = form.getResponses();
+  var responses = form.getResponses(); 
   var response = responses[responsesCount-1];
   var responseItems = response.getItemResponses();
-  var recipient = response.getRespondentEmail();
+  var recipient = response.getRespondentEmail(); // Get the email address of the respondent
   
   // Random Lottery extraction
-  var lotteryNr = Math.floor((Math.random() * 33) + 1); 
-  var rowNr = 0;
-  var yellowProbA = 0;
-  var yellowProbB = 0;
+  var lotteryNr = Math.floor((Math.random() * 33) + 1); // Generate a random integer number between 1 and 33
+  // Initialize variables for the lottery series, switch point, row number, and probabilities
+  let serieNr, switchPoint, rowNr, yellowProbA, yellowProbB;
+  // Determine the series number (1,2 or 3), the row and probabilities based on the lotteryNr (1-33)
   if (lotteryNr <= 12){
-    var serieNr = 1;
-    var switchPoint = responseItems[4].getResponse();
-    var rowNr = lotteryNr;
-    var yellowProbA = 0.3; // 30% chance for yellow in lottery A
-    var yellowProbB = 0.1; // 10% chance for yellow in lottery B
+    serieNr = 1;
+    switchPoint = responseItems[4].getResponse();
+    rowNr = lotteryNr;
+    yellowProbA = 0.3; // 30% chance for yellow in lottery A
+    yellowProbB = 0.1; // 10% chance for yellow in lottery B
   } else if (lotteryNr <= 26) {
-    var serieNr = 2;
-    var switchPoint = responseItems[5].getResponse();
-    var rowNr = lotteryNr - 12;
-    var yellowProbA = 0.9; // 90% chance for yellow in lottery A
-    var yellowProbB = 0.7; // 70% chance for yellow in lottery B
+    serieNr = 2;
+    switchPoint = responseItems[5].getResponse();
+    rowNr = lotteryNr - 12;
+    yellowProbA = 0.9; // 90% chance for yellow in lottery A
+    yellowProbB = 0.7; // 70% chance for yellow in lottery B
   } else  {
-    var serieNr = 3;
-    var switchPoint = responseItems[6].getResponse();
-    var rowNr = lotteryNr - 26;
-    var yellowProbA = 0.5; // 50% chance for yellow in lottery A
-    var yellowProbB = 0.5; // 50% chance for yellow in lottery B
+    serieNr = 3;
+    switchPoint = responseItems[6].getResponse();
+    rowNr = lotteryNr - 26;
+    yellowProbA = 0.5; // 50% chance for yellow in lottery A
+    yellowProbB = 0.5; // 50% chance for yellow in lottery B
   }
-
+  // Convert the switchPoint response to a number if it is a string
   if (switchPoint == '0 I would never choose lottery A') {
-    var switchPoint = 0;
+    switchPoint = 0;
   }
   if (switchPoint == '14 (always A)') {
-    var switchPoint = 14;
+    switchPoint = 14;
   }
-  
   if (switchPoint == '12 (always lottery A)') {
-    var switchPoint = 12;
+    switchPoint = 12;
   }  
   if (switchPoint == '7 (always A)') {
-    var switchPoint = 7;
+    switchPoint = 7;
   }
-  // Determina la scelta implicita dell’utente nella riga estratta
+  // Determine the user's choice based on the row number and switch point
   var userChoice = (rowNr <= switchPoint) ? 'A' : 'B';
-  // Determina il colore della pallina estratta
-  var extraction = Math.random() ;
+  // Extract the color of the drawn ball based on the user's choice and the probabilities
+  var extraction = Math.random();
   var ballColor = (userChoice == 'A') ? (extraction < yellowProbA ? 'yellow' : 'white') : (extraction < yellowProbB ? 'yellow' : 'white');
-  //array with the gains 
+  //Array with the gains 
   var outcomesA = {
     1: [[400, 100], [400, 100], [400, 100], [400, 100], [400, 100], [400, 100], [400, 100], [400, 100], [400, 100], [400, 100], [400, 100], [400, 100]],
     2: [[400, 300], [400, 300], [400, 300], [400, 300], [400, 300], [400, 300], [400, 300], [400, 300], [400, 300], [400, 300], [400, 300], [400, 300], [400, 300], [400, 300]],
@@ -73,15 +73,16 @@ function onFormSubmit(e) {
   Logger.log('Extraction: ' + extraction);
   Logger.log('Ball Color: ' + ballColor);
   Logger.log('Gain: ' + gain);
-  // Extracting individual responses
-  //var nameResponse = responseItems[0].getResponse();
 
   var emailaddress = 'tonio.paparella@gmail.com'; 
   var subject = 'Lottery outcome'; // Replace with your desired subject
-  var message = 'The random number generator selected Row number ' + rowNr +' from Serie '+ serieNr + '. In this Row, you have selected Lottery ' + userChoice+'.  The ball that has been drawn is ' + ballColor +'. This means you gained '+ gain + ' Points. The total amount you will receive is '+ gainMoney + ' Euros.';
+  var message = 'The random number generator selected Row number ' + rowNr +' from Serie '+ serieNr + '. In this Row, you have selected Lottery ' + userChoice+'. The ball that has been drawn is ' + ballColor +'. This means you gained '+ gain + ' Points. The total amount you will receive is '+ gainMoney + ' Euros.';
   Logger.log(message);
   // Send the email directly
 
   //MailApp.sendEmail(recipient, subject, message);
-
+  // Send a copy of the email to yourself
+  var self_message = recipient + ' has submitted the form. The random number generator selected Row number ' + rowNr +' from Serie '+ serieNr + '. In this Row, the user has selected Lottery ' + userChoice+'. The ball that has been drawn is ' + ballColor +'. This means the user gained '+ gain + ' Points. The total amount the user will receive is '+ gainMoney + ' Euros.';
+  Logger.log(self_message);
+  //MailApp.sendEmail(emailaddress, subject, self_message);
 }
