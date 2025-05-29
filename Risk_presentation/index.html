@@ -8,7 +8,7 @@
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+		<link rel="stylesheet" href="dist/theme/white.css">
 
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/monokai.css">
@@ -21,35 +21,6 @@
 			</div>
 		</div>
 		<div>
-			vorrei scrivere una pagina html con il framework reveal.js che faccia una domanda all'user tipo che lotteria vuoi giocare fra la a e b e poi salvi la rsiposta dell'utente su un csv
-			<form id="lotteryForm">
-				<label for="lotteryChoice">Che lotteria vuoi giocare?</label>
-				<select id="lotteryChoice" name="lotteryChoice">
-					<option value="a">A</option>
-					<option value="b">B</option>
-					<option value="b">C</option>
-				</select>
-				<button type="submit">Invia</button>
-			</form>
-			<script>
-				document.getElementById('lotteryForm').addEventListener('submit', function(event) {
-					event.preventDefault(); // Prevent the form from submitting normally
-
-					const choice = document.getElementById('lotteryChoice').value;
-
-					// Create a CSV string
-					const csvContent = "data:text/csv;charset=utf-8," + choice;
-
-					// Create a link element
-					const encodedUri = encodeURI(csvContent);
-					const link = document.createElement("a");
-					link.setAttribute("href", encodedUri);
-					link.setAttribute("download", "lottery_choice.csv");
-
-					// Append to the body and trigger download
-					document.body.appendChild(link);
-					link.click();
-				});
 		</div>
 		<script src="dist/reveal.js"></script>
 		<script src="plugin/notes/notes.js"></script>

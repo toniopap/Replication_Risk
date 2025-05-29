@@ -24,4 +24,6 @@ ren v3 s3point
 
 sort s1point s2point s3point 
 merge m:1 s1point s2point s3point using t_table
+drop if _merge != 3
 drop _merge
+su
