@@ -7,7 +7,7 @@ function onFormSubmit(e) {
   var response = responses[responsesCount-1];
   var responseItems = response.getItemResponses();
   var recipient = response.getRespondentEmail(); // Get the email address of the respondent
-  
+  var initial_endowment = 500
   // Random Lottery extraction
   var lotteryNr = Math.floor((Math.random() * 33) + 1); // Generate a random integer number between 1 and 33
   // Initialize variables for the lottery series, switch point, row number, and probabilities
@@ -64,7 +64,8 @@ function onFormSubmit(e) {
   };
   // Calculate the gain based on the user's choice and the drawn ball color
   var gain = (userChoice == 'A') ? (ballColor == 'yellow') ? outcomesA[serieNr][rowNr -1][0] : outcomesA[serieNr][rowNr - 1][1] : (ballColor == 'yellow') ? outcomesB[serieNr][rowNr - 1][0] : outcomesB[serieNr][rowNr - 1][1];
-  var gainMoney = gain / 100; // Convert gain to money (assuming gain is in cents)
+  var total_gain = initial_endowment + gain
+  var gainMoney = total_gain / 100; // Convert gain to money (assuming gain is in cents)
   // Log the results for debugging
   Logger.log('Lottery Number: ' + lotteryNr);
   Logger.log('Row Number: ' + rowNr);
@@ -73,16 +74,17 @@ function onFormSubmit(e) {
   Logger.log('Extraction: ' + extraction);
   Logger.log('Ball Color: ' + ballColor);
   Logger.log('Gain: ' + gain);
+  Logger.log('Total gain: ' + total_gain)
 
   var emailaddress = 'tonio.paparella@gmail.com'; 
   var subject = 'Lottery outcome'; // Replace with your desired subject
-  var message = 'The random number generator selected Row number ' + rowNr +' from Serie '+ serieNr + '. In this Row, you have selected Lottery ' + userChoice+'. The ball that has been drawn is ' + ballColor +'. This means you gained '+ gain + ' Points. The total amount you will receive is '+ gainMoney + ' Euros.';
+  var message = 'The random number generator selected Row number ' + rowNr +' from Serie '+ serieNr + '. In this Row, you have selected Lottery ' + userChoice+'. The ball that has been drawn is ' + ballColor +'. This means you gained '+ gain + ' Points. The total amount you will receive is '+ total_gain + '.';
   Logger.log(message);
   // Send the email directly
 
   //MailApp.sendEmail(recipient, subject, message);
   // Send a copy of the email to yourself
-  var self_message = recipient + ' has submitted the form. The random number generator selected Row number ' + rowNr +' from Serie '+ serieNr + '. In this Row, the user has selected Lottery ' + userChoice+'. The ball that has been drawn is ' + ballColor +'. This means the user gained '+ gain + ' Points. The total amount the user will receive is '+ gainMoney + ' Euros.';
+  var self_message = recipient + ' has submitted the form. The random number generator selected Row number ' + rowNr +' from Serie '+ serieNr + '. In this Row, the user has selected Lottery ' + userChoice+'. The ball that has been drawn is ' + ballColor +'. This means the user gained '+ gain + ' Points. The total amount the user will receive is '+ total_gain + '.';
   Logger.log(self_message);
   //MailApp.sendEmail(emailaddress, subject, self_message);
 }

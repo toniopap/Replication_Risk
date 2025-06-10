@@ -2,7 +2,7 @@ clear all
 cap cd /Users/tonio/Documents/GitHub/Replication_Risk/Modelling
 cap cd "C:\Users\tonio\OneDrive\Documenti\GitHub\Replication_Risk\Modelling"
 *#I would choose Lottery A from Row 1 to Row
-import delimited "C:\Users\tonio\OneDrive\Documenti\GitHub\Replication_Risk\Modelling\t_table.csv"
+import delimited "t_table.csv"
 drop v1
 save t_table , replace
 
@@ -27,3 +27,4 @@ merge m:1 s1point s2point s3point using t_table
 drop if _merge != 3
 drop _merge
 su
+kdensity lambda
